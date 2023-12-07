@@ -1,13 +1,10 @@
-package org.backup.tools.report;
+package org.backup.tools.reporting;
 
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.backup.tools.Resource;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Collection;
 
 public class XlsxReport implements Report<File, File> {
@@ -17,10 +14,9 @@ public class XlsxReport implements Report<File, File> {
     @Override
     public File generate(Collection<Resource> collection, File outputDir) {
 
-        Workbook wb = new XSSFWorkbook();
-        Sheet sheet = wb.createSheet();
+        final Workbook wb = new XSSFWorkbook();
 
-        XlsxHandler xlsxHandler = new XlsxHandler(sheet);
+        XlsxHandler xlsxHandler = new XlsxHandler(wb);
         xlsxHandler.addRow("NAME", "LOCATION", "HASH", "SIZE");
 
         for (Resource resource : collection) {
@@ -28,14 +24,9 @@ public class XlsxReport implements Report<File, File> {
             xlsxHandler.addRow(file.getName(), file.getParent(), resource.hash(), resource.size());
         }
 
-        try {
-            final File file = new File(outputDir, DEFAULT_REPORT_FILENAME);
-            try (FileOutputStream stream = new FileOutputStream(file)) {
-                wb.write(stream);
-            }
-            return file;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        final File file = new File(outputDir, DEFAULT_REPORT_FILENAME);
+        xlsxHandler.write(file);
+
+        return file;
     }
 }

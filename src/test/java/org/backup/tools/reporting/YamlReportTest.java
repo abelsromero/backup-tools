@@ -1,4 +1,4 @@
-package org.backup.tools.report;
+package org.backup.tools.reporting;
 
 import org.backup.tools.Resource;
 import org.junit.jupiter.api.Test;
@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.backup.tools.report.ReportResource.reportResource;
-import static org.backup.tools.report.TestData.testResources;
+import static org.backup.tools.reporting.ReportResource.reportResource;
+import static org.backup.tools.reporting.TestData.testResources;
 
 class YamlReportTest {
 

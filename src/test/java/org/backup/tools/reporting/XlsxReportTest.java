@@ -1,4 +1,4 @@
-package org.backup.tools.report;
+package org.backup.tools.reporting;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.backup.tools.Resource;
@@ -12,8 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.backup.tools.report.ReportResource.reportResource;
-import static org.backup.tools.report.TestData.testResources;
+import static org.backup.tools.reporting.ReportResource.reportResource;
+import static org.backup.tools.reporting.TestData.testResources;
 
 class XlsxReportTest {
 

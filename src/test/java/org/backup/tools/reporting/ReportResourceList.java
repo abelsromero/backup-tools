@@ -1,4 +1,4 @@
-package org.backup.tools.report;
+package org.backup.tools.reporting;
 
 import java.util.List;
 import java.util.Map;

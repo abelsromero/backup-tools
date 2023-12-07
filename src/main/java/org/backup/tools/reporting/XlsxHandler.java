@@ -1,12 +1,14 @@
-package org.backup.tools.report;
+package org.backup.tools.reporting;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,14 +18,17 @@ import java.util.List;
 class XlsxHandler {
 
     private final Sheet sheet;
+    private final Workbook workbook;
+
     private int rowIndex = 0;
 
-    XlsxHandler(XSSFWorkbook wb) {
-        this.sheet = wb.getSheetAt(0);
-    }
-
-    XlsxHandler(Sheet sheet) {
-        this.sheet = sheet;
+    XlsxHandler(Workbook workbook) {
+        this.workbook = workbook;
+        if (workbook.getNumberOfSheets() == 0) {
+            this.sheet = workbook.createSheet();
+        } else {
+            this.sheet = workbook.getSheetAt(0);
+        }
     }
 
     Row addRow(Object... values) {
@@ -37,7 +42,7 @@ class XlsxHandler {
                 case Long l -> cell.setCellValue(l);
                 case Boolean b -> cell.setCellValue(b);
                 case Integer i -> cell.setCellValue(i);
-                default -> throw new IllegalStateException("Unexpected value: " + value);
+                default -> throw new IllegalStateException("Unexpected result: " + value);
             }
             columnIndex++;
         }
@@ -71,4 +76,13 @@ class XlsxHandler {
         }
     }
 
+    public void write(File destination) {
+        try {
+            try (FileOutputStream stream = new FileOutputStream(destination)) {
+                workbook.write(stream);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package org.backup.tools;
 
+import org.apache.commons.io.FileUtils;
 import org.backup.tools.validation.HashFunction;
 import org.backup.tools.validation.MessageDigester;
 
@@ -21,7 +22,6 @@ public class FileComparator {
     public static void main(String[] args) throws IOException {
 
         final Path path = Path.of("/media/")
-            .resolve("")
             //.resolve("bios")
             ;
 
@@ -37,7 +37,7 @@ public class FileComparator {
         Long totalSize = data.stream()
             .map(resource -> resource.size())
             .reduce(0L, Long::sum);
-        System.out.println("Total files size: " + megas(totalSize));
+        System.out.println("Total files size: " + humanUnits(totalSize));
 
         Set<String> processed = new HashSet<>();
         Long uniquesSize = data.stream()
@@ -47,12 +47,12 @@ public class FileComparator {
             .reduce(0L, Long::sum);
 
         System.out.println("Unique files: " + processed.size());
-        System.out.println("Unique files size: " + megas(uniquesSize));
-        System.out.println("Saved space files: " + megas(totalSize - uniquesSize));
+        System.out.println("Unique files size: " + humanUnits(uniquesSize));
+        System.out.println("Saved space files: " + humanUnits(totalSize - uniquesSize));
     }
 
-    private static String megas(Long uniquesSize) {
-        return (uniquesSize / (1024 * 1024)) + " MB";
+    private static String humanUnits(Long uniquesSize) {
+        return FileUtils.byteCountToDisplaySize(uniquesSize);
     }
 
 }
