@@ -1,0 +1,29 @@
+plugins {
+    id 'jacoco'
+    id 'java'
+    id 'org.graalvm.buildtools.native' version '0.9.28'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'commons-codec:commons-codec:1.16.0'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+    implementation 'org.yaml:snakeyaml:2.2'
+
+    testImplementation platform("org.junit:junit-bom:5.10.1")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
