@@ -6,8 +6,7 @@ import java.util.concurrent.Callable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TimedResultTest {
-
+class TimedExecutionTest {
 
     @Test
     void shouldTimeRunnable() {
@@ -19,13 +18,20 @@ class TimedResultTest {
     }
 
     @Test
+    void shouldReturn1AsMinimum() {
+        var result = TimedExecution.run(() -> {});
+
+        assertThat(result.millis()).isGreaterThanOrEqualTo(1l);
+    }
+
+    @Test
     void shouldTimeSupplier() throws Exception {
-        final Callable<String> runnable = () -> {
+        final Callable<String> callable = () -> {
             sleep();
             return "hello";
         };
 
-        var result = TimedExecution.run(runnable);
+        var result = TimedExecution.run(callable);
 
         assertThat(result.result()).isEqualTo("hello");
         assertThat(result.millis()).isGreaterThanOrEqualTo(100l);

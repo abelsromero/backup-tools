@@ -10,11 +10,14 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 
 class XlsxHandlerTest {
 
@@ -29,6 +32,42 @@ class XlsxHandlerTest {
 
         assertThat(handler).isNotNull();
     }
+
+    @Test
+    void shouldFailReadingWhenFileDoesNoExists() {
+        final File file = new File(tempDir, UUID.randomUUID().toString());
+        assertThat(file).doesNotExist();
+
+        var exception = catchException(() -> XlsxHandler.read(file));
+
+        assertThat(exception)
+            .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    void shouldFailReadingWhenFileIsNotValid() throws IOException {
+        final File file = new File(tempDir, UUID.randomUUID().toString());
+        Files.writeString(file.toPath(), "Hello!!");
+        assertThat(file).isNotEmpty();
+
+        var exception = catchException(() -> XlsxHandler.read(file));
+
+        assertThat(exception)
+            .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    void shouldFailWriteIfDestinationDoesNotExists() throws IOException {
+        final File file = new File(tempDir, UUID.randomUUID().toString());
+        Files.writeString(file.toPath(), "Hello!!");
+        assertThat(file).isNotEmpty();
+
+        var exception = catchException(() -> XlsxHandler.read(file));
+
+        assertThat(exception)
+            .isInstanceOf(RuntimeException.class);
+    }
+
 
     @Test
     void shouldAddRow(@TempDir File tempDir) {
@@ -58,6 +97,19 @@ class XlsxHandlerTest {
         final Sheet sheet = row.getSheet();
         assertThat(sheet.getFirstRowNum()).isEqualTo(0);
         assertThat(sheet.getLastRowNum()).isEqualTo(rows - 1);
+    }
+
+    @Test
+    void shouldFailWhenAddingUnsupportedData() {
+        final TestWorkbook testWorkbook = new TestWorkbook(tempDir);
+        final File file = testWorkbook.createEmpty();
+
+        XlsxHandler handler = XlsxHandler.read(file);
+
+        var exception = catchException(() -> handler.addRow(LocalDate.now()));
+
+        assertThat(exception)
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

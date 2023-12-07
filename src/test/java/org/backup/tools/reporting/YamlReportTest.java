@@ -8,11 +8,15 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 import static org.backup.tools.reporting.ReportResource.reportResource;
 import static org.backup.tools.reporting.TestData.testResources;
 
@@ -70,5 +74,17 @@ class YamlReportTest {
 
     private Map<String, String> readMetadata(File file) {
         return readResources(file).getMetadata();
+    }
+
+    @Test
+    void shouldFailWhenOutputCannotBeWritten(@TempDir File tempDir) throws IOException {
+        final File testFile = new File(tempDir, UUID.randomUUID().toString());
+        Files.writeString(testFile.toPath(), "this.is.not=a_yaml");
+
+        final YamlReport report = new YamlReport();
+        Exception exception = catchException(() -> report.generate(List.of(), testFile));
+
+        assertThat(exception)
+            .isInstanceOf(RuntimeException.class);
     }
 }

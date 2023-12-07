@@ -27,3 +27,14 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.75
+            }
+        }
+    }
+}
+
