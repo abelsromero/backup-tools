@@ -42,7 +42,7 @@ class XlsxHandler {
                 case Long l -> cell.setCellValue(l);
                 case Boolean b -> cell.setCellValue(b);
                 case Integer i -> cell.setCellValue(i);
-                default -> throw new IllegalStateException("Unexpected result: " + value);
+                default -> throw new IllegalArgumentException("Unexpected result: " + value);
             }
             columnIndex++;
         }
