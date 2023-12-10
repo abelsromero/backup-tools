@@ -2,3 +2,32 @@
 
 A repository for a personal file management tools.
 
+== Testing
+
+There are two sets of tests:
+
+* unit: any test without special configurations
+
+ ./gradlew test
+
+* integrated: annotated with `@IntegratedTest`.
+
+WARNING: These do real calls to repositories (like GDrive) and require proper configuration in `.config/jbackups`.
+
+ ./gradlew integratedTests
+
+. Create `.config/jbackups/config.yaml`
++
+----
+application:
+  name:
+  scopes:
+   - https://www.googleapis.com/auth/drive.file
+   - https://www.googleapis.com/auth/drive.metadata
+  credentials-path: ~/.config/jbackups/app-credentials.json
+options:
+  tokens-path: ~/.config/jbackups/tokens
+----
+
+. Add `.config/jbackups/app-credentials.json` from the Google App configuration.
+See https://developers.google.com/drive/api/quickstart/java.
