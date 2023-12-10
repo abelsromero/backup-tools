@@ -6,7 +6,6 @@ import com.google.api.services.drive.model.ContentRestriction;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import org.apache.tika.Tika;
-import org.backup.tools.GoogleDriveConnector;
 import org.backup.tools.repositories.Repository;
 
 import java.io.IOException;
@@ -14,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GDrive implements Repository {
+
+    private static final String FOLDER_EMOJI = "\uD83D\uDCC1";
+    private static final String FILE_EMOJI = "\uD83D\uDDCE";
 
     private final Drive.Files client;
 
@@ -126,7 +128,7 @@ public class GDrive implements Repository {
 
     public String getLocation(File file) throws IOException {
         if (file.getParents() == null)
-            return GoogleDriveConnector.FOLDER_EMOJI + " ";
+            return FOLDER_EMOJI + " ";
 
         final String parentId = file.getParents().get(0);
         final File parentInfo = client.get(parentId)
