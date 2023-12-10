@@ -1,0 +1,9 @@
+application:
+  name: test-app
+  scopes:
+   - read_all
+   - write_none
+  credentials-path: classpath:/configs/fake-credentials.json
+
+options:
+  tokens-path: tokens_and_tokens
