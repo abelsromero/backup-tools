@@ -1,5 +1,6 @@
 package org.backup.tools.validation;
 
+import org.backup.tools.test.ClasspathResource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,15 +15,11 @@ class HashFunctionsTest {
     @ParameterizedTest
     @MethodSource("stringArgumentsProvider")
     void shouldProcessFile(HashFunction function, String inputFile, String expected) {
-        final File file = new File(fromClasspath(inputFile));
+        final File file = new File(ClasspathResource.getLocation(inputFile));
 
         final String hash = function.hash(file);
 
         assertThat(hash).isEqualTo(expected);
-    }
-
-    private String fromClasspath(String file) {
-        return this.getClass().getResource(file).getFile();
     }
 
     private static Stream<Arguments> stringArgumentsProvider() {
