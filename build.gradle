@@ -1,7 +1,7 @@
 plugins {
     id 'jacoco'
     id 'java'
-    id 'org.graalvm.buildtools.native' version '0.9.28'
+    id 'org.graalvm.buildtools.native' version '0.10.1'
 }
 
 repositories {
